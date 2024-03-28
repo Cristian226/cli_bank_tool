@@ -8,15 +8,12 @@
 
 user currentUser;
  
-
-
-
 void newAcc(){
-    WINDOW * win = newwin(12, 60 , 0  , 0);
-    box(win,0,0);
+    WINDOW * win = newwin(12, 60, 0, 0);
+    box(win, 0, 0);
     echo();
-    mvwprintw(win, 0,27, "NEW ACCOUNT");
-    mvwprintw(win, 10,1, "Press Control+C to exit");
+    mvwprintw(win, 0, 27, "NEW ACCOUNT");
+    mvwprintw(win, 10, 1, "Press Control+C to exit");
 
     account temp;
     strcpy(temp.IBAN,"");
@@ -36,14 +33,14 @@ void newAcc(){
     temp.lastName[0]=toupper(temp.lastName[0]);
 
     // scriere moneda
-    do{
-    mvwprintw(win,3,1,"Enter currency type: ");
-    wgetstr(win,temp.moneda);
-    //mvwprintw(win,8,1,"%s",temp.moneda);
-    mvwprintw(win,3,1,"                                   ");
-    mvwprintw(win,9,1,"Enter a valid currency type (USD, EUR, RON)");
-    for(int i=0;i<strlen(temp.moneda);i++)
-        temp.moneda[i] = toupper(temp.moneda[i]);
+    do {
+        mvwprintw(win,3,1,"Enter currency type: ");
+        wgetstr(win,temp.moneda);
+        //mvwprintw(win,8,1,"%s",temp.moneda);
+        mvwprintw(win,3,1,"                                   ");
+        mvwprintw(win,9,1,"Enter a valid currency type (USD, EUR, RON)");
+        for(int i=0;i<strlen(temp.moneda);i++)
+            temp.moneda[i] = toupper(temp.moneda[i]);
     } while(strcmp(temp.moneda, "USD")!=0 &&    // verif moneda e valida
             strcmp(temp.moneda, "EUR")!=0 &&
             strcmp(temp.moneda, "RON")!=0 );
@@ -59,13 +56,13 @@ void newAcc(){
 
     strcpy(currentUser.name, temp.name);   // set current user
     strcpy(currentUser.lastName, temp.lastName);
-    mvwprintw(win,9,1,"                                                       ");
-    mvwprintw(win,8,1,"Iban generat: %s",temp.IBAN);
-    mvwprintw(win, 9,1, "Welcome %s %s", currentUser.name, currentUser.lastName);
+    mvwprintw(win, 9, 1, "                                                       ");
+    mvwprintw(win, 8, 1, "Iban generat: %s",temp.IBAN);
+    mvwprintw(win, 9, 1, "Welcome %s %s", currentUser.name, currentUser.lastName);
 
     // scriere in fisier
     account accounts[100];
-    int n=0;
+    int n = 0;
     readFile(accounts, &n);
     accounts[n]=temp;
     n++;
@@ -73,9 +70,7 @@ void newAcc(){
 
     wrefresh(win);
     wgetch(win);
-    mainMenu();
-
-    
+    mainMenu();   
 }
 
 void loginAcc(){
@@ -102,7 +97,6 @@ void loginAcc(){
         temp.lastName[i]= tolower(temp.lastName[i]);
     temp.lastName[0]=toupper(temp.lastName[0]);
 
-
     int isInFile=0;
     account accounts[100];   // citire conturi din fisier
     int n=0;
@@ -111,20 +105,17 @@ void loginAcc(){
         if( !strcmp(temp.name, accounts[i].name) && !strcmp(temp.lastName, accounts[i].lastName) )
             isInFile = 1;
     
-    if(isInFile){
+    if (isInFile){
         strcpy(currentUser.name, temp.name);
         strcpy(currentUser.lastName, temp.lastName);
         mvwprintw(win, 9,1, "Welcome %s %s", currentUser.name, currentUser.lastName);
         wgetch(win);
         mainMenu();
-    }
-    else{
+    } else {
         mvwprintw(win, 9,1, "Account not found");
         wgetch(win);
         login_menu();
     }
-
-
 }
 
 void login_menu(){
@@ -133,22 +124,15 @@ void login_menu(){
     mvwprintw(win, 0,27, "LOGIN MENU");
     mvwprintw(win, 9,1, "Use up/down arrow to navigate");
     mvwprintw(win, 10,1, "Press Control+C to exit");
-    
 
     menuChoices choices[2]= {{"New account", newAcc}, {"Login", loginAcc}};
-    menu(choices, win,2);
+    menu(choices, 2, win, NULL);
     refresh();
     wrefresh(win);
 }
 
-
-
-
 int main(){
-
-
     initscr();
     login_menu();
     mainMenu();
-
 }

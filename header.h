@@ -8,9 +8,9 @@
 #include <ctype.h>
 
 typedef struct{
-        char name[20];
-        void (*f)();
-    } menuChoices;
+    char name[20];
+    void (*f)(); // Functie asociata optiunii
+} menuChoices;
 
 typedef struct{
     char IBAN[15];
@@ -28,8 +28,8 @@ typedef struct{
 
 //user currentUser;
 
-void menu();
-void menu2();
+void menu(menuChoices choices[], int choicesCount, WINDOW* win,
+          int *highlightedOut);
 void mainMenu();
 void login_menu();
 

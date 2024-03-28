@@ -31,7 +31,7 @@ void editIBAN(){
     
 }
 
-void editType(){
+void editCurrency(){
     extern user currentUser;
     WINDOW * win = newwin(12, 60 , 0  , 0);
     box(win,0,0);
@@ -79,7 +79,7 @@ void editType(){
     mainMenu();
 }
 
-void editCurrency(){
+void editBalance(){
     extern user currentUser;
     WINDOW * win = newwin(12, 60 , 0  , 0);
     box(win,0,0);
@@ -118,17 +118,17 @@ void selectWhatToEdit(){
     box(win,0,0);
     mvwprintw(win, 0,5, "SELECT WHAT TO EDIT");
 
-    menuChoices choices[3]= {{"Edit IBAN", editIBAN}, {"Edit currency", editCurrency},
-                             {"Edit money type", editType }};
-    menu(choices, win,3);
-    
+    menuChoices choices[3]= {{"Edit IBAN", editIBAN},
+                             {"Edit balance", editBalance},
+                             {"Edit currency", editCurrency }};
+    menu(choices, 3, win, NULL);    
 }
 
 void editAcc(){
     extern user currentUser;
     WINDOW * win = newwin(12, 60 , 0  , 0);
     box(win,0,0);
-    mvwprintw(win, 0,5, "SELECT AN ACCOUNT");
+    mvwprintw(win, 0, 5, "SELECT AN ACCOUNT");
 
     ind=0;
     account nonUserAccounts[100];
@@ -177,6 +177,6 @@ void editAcc(){
                                      nonUserAccounts[i].moneda, nonUserAccounts[i].valuta );
     fclose(g);
     
-    menu2(choices, win, ind, &indexOfAccToEdit);
+    menu(choices, ind, win, &indexOfAccToEdit);
          
 }

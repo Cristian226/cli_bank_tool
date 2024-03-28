@@ -141,5 +141,5 @@ void transfer(){
     } 
     fclose(f);
     
-    menu2(choices, win, ind, &indexOfAccToEdit);
+    menu(choices, ind, win, &indexOfAccToEdit);
 }
