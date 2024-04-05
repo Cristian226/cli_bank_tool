@@ -6,8 +6,10 @@ void readFile(account accounts[100], int *i){
     if (f == NULL)
         return;
     while (fscanf(f, "%s %s %s %s %d", 
-                  &accounts[*i].IBAN, &accounts[*i].name,
-                  &accounts[*i].lastName, &accounts[*i].moneda,
+                  &accounts[*i].IBAN, 
+                  &accounts[*i].name,
+                  &accounts[*i].lastName, 
+                  &accounts[*i].moneda,
                   &accounts[*i].valuta ) == 5) 
         (*i)++;
     fclose(f);

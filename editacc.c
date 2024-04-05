@@ -1,24 +1,44 @@
 #include "header.h"
 account accToEdit;
-int indexOfAccToEdit;
-int ind;
+extern int indexOfAccToEdit;
+extern int ind;
 
 void editIBAN(){
     extern user currentUser;
     WINDOW * win = newwin(12, 60 , 0  , 0);
     box(win,0,0);
-    echo();
     mvwprintw(win,0,10, "EDIT IBAN");
     mvwprintw(win, 1,1, "Current IBAN: %s", currentUser.curUserAccounts[indexOfAccToEdit].IBAN);
-    mvwprintw(win,2,1,"Insert new IBAN: ");
 
+    int countIBAN;
     char temp[25];
-    wgetstr(win,temp);
-    strcpy(currentUser.curUserAccounts[indexOfAccToEdit].IBAN, temp);
-    noecho();
     account accounts[100];
     int n=0;
     readFile(accounts, &n);
+    
+
+    do {
+        echo();
+        mvwprintw(win, 2,1, "                                                          ");
+        mvwprintw(win,2,1,"Insert new IBAN: ");
+        
+        wgetstr(win,temp);
+        countIBAN=0;
+        for(int i=0; i<n; i++)
+            if( !strcmp(temp, accounts[i].IBAN)){
+                countIBAN++;
+                mvwprintw(win, 9,1, "Insert a non used IBAN");
+            }
+        for(int i=0; i< ind; i++)
+            if(!strcmp(temp, currentUser.curUserAccounts[i].IBAN)){
+                countIBAN++;
+                mvwprintw(win, 9,1, "Insert a non used IBAN");
+            }
+
+    } while ( countIBAN >0);
+
+    noecho();
+    strcpy(currentUser.curUserAccounts[indexOfAccToEdit].IBAN, temp);
     FILE *g = fopen("accounts.txt", "w");
     for(int i=0; i<n; i++)
         fprintf(g, "%s %s %s %s %d\n", accounts[i].IBAN, accounts[i].name, accounts[i].lastName, accounts[i].moneda, accounts[i].valuta ); 
@@ -36,15 +56,15 @@ void editCurrency(){
     WINDOW * win = newwin(12, 60 , 0  , 0);
     box(win,0,0);
     echo();
-    mvwprintw(win,0,10, "EDIT CURRENCY TYPE");
-    mvwprintw(win, 1,1, "Current currency type: %s", currentUser.curUserAccounts[indexOfAccToEdit].moneda);
+    mvwprintw(win,0,10, "EDIT CURRENCY");
+    mvwprintw(win, 1,1, "Current currency: %s", currentUser.curUserAccounts[indexOfAccToEdit].moneda);
     char oldmoneda[4];
     strcpy(oldmoneda, currentUser.curUserAccounts[indexOfAccToEdit].moneda);
     do{
-    mvwprintw(win,2,1,"Enter new currency type: ");
+    mvwprintw(win,2,1,"Enter new currency: ");
     wgetstr(win,currentUser.curUserAccounts[indexOfAccToEdit].moneda);
     mvwprintw(win,2,1,"                                   ");
-    mvwprintw(win,9,1,"Enter a valid currency type (USD, EUR, RON)");
+    mvwprintw(win,9,1,"Enter a valid currency (USD, EUR, RON)");
     for(int i=0;i<strlen(currentUser.curUserAccounts[indexOfAccToEdit].moneda);i++)
         currentUser.curUserAccounts[indexOfAccToEdit].moneda[i] = toupper(currentUser.curUserAccounts[indexOfAccToEdit].moneda[i]);
     } while(strcmp(currentUser.curUserAccounts[indexOfAccToEdit].moneda, "USD")!=0 &&    // verif moneda e valida
@@ -84,13 +104,28 @@ void editBalance(){
     WINDOW * win = newwin(12, 60 , 0  , 0);
     box(win,0,0);
     echo();
-    mvwprintw(win,0,10, "EDIT CURRENCY");
-    mvwprintw(win, 1,1, "Current currency: %d", currentUser.curUserAccounts[indexOfAccToEdit].valuta);
-    mvwprintw(win,2,1,"Insert new currency: ");
+    mvwprintw(win,0,10, "EDIT BALANCE");
+    mvwprintw(win, 1,1, "Current balance: %d", currentUser.curUserAccounts[indexOfAccToEdit].valuta);
+
 
     char tempstr[15];
+    int isnum;
+    do {
+        mvwprintw(win, 2,1, "                                                          ");
+        mvwprintw(win,2,1,"Insert new balance: ");
+        
+        wgetstr(win,tempstr);
+        isnum = 1;
+        for (int i=0; i<strlen(tempstr); i++)
+            if (!isdigit(tempstr[i])){
+                isnum = 0;
+                mvwprintw(win, 9,1, "Insert a valid number");
+            }
+
+    } while ( isnum == 0);
+
+    
     int tempint=0;
-    wgetstr(win, tempstr);
     for(int i=0; i< strlen(tempstr); i++){
         tempint*=10;
         tempint+= tempstr[i] - '0';

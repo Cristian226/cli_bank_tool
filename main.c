@@ -7,6 +7,8 @@
 //  %s %s %s %s %d
 
 user currentUser;
+int indexOfAccToEdit;
+int ind;
  
 void newAcc(){
     WINDOW * win = newwin(12, 60, 0, 0);
@@ -34,11 +36,11 @@ void newAcc(){
 
     // scriere moneda
     do {
-        mvwprintw(win,3,1,"Enter currency type: ");
+        mvwprintw(win,3,1,"Enter currency: ");
         wgetstr(win,temp.moneda);
         //mvwprintw(win,8,1,"%s",temp.moneda);
         mvwprintw(win,3,1,"                                   ");
-        mvwprintw(win,9,1,"Enter a valid currency type (USD, EUR, RON)");
+        mvwprintw(win,9,1,"Enter a valid currency (USD, EUR, RON)");
         for(int i=0;i<strlen(temp.moneda);i++)
             temp.moneda[i] = toupper(temp.moneda[i]);
     } while(strcmp(temp.moneda, "USD")!=0 &&    // verif moneda e valida
@@ -122,7 +124,11 @@ void login_menu(){
     WINDOW * win = newwin(12, 60 , 0  , 0);
     box(win,0,0);
     mvwprintw(win, 0,27, "LOGIN MENU");
-    mvwprintw(win, 9,1, "Use up/down arrow to navigate");
+    mvwprintw(win, 5,1, "----------------------------------------------------------");
+    mvwprintw(win, 6, 1, "TIPS:");
+    mvwprintw(win, 7,1, "Press ENTER to continue");
+    mvwprintw(win, 8,1, "Use up/down arrow to navigate");
+    mvwprintw(win, 9,1, "----------------------------------------------------------");
     mvwprintw(win, 10,1, "Press Control+C to exit");
 
     menuChoices choices[2]= {{"New account", newAcc}, {"Login", loginAcc}};
@@ -131,8 +137,33 @@ void login_menu(){
     wrefresh(win);
 }
 
-int main(){
+int main(int argc, char** argv){
+
     initscr();
+
+    // verificarre argv
+    if(argv[1] ){
+        account accounts[100];
+        FILE *f = fopen("accounts.txt", "r");
+        if (f == NULL)
+            login_menu();
+        int i=0;
+        while (fscanf(f, "%s %s %s %s %d", 
+            &accounts[i].IBAN, 
+            &accounts[i].name, 
+            &accounts[i].lastName, 
+            &accounts[i].moneda, 
+            &accounts[i].valuta ) == 5){
+                // verificam daca este cont al current user
+                if( !strcmp(argv[1], accounts[i].name) && 
+                    !strcmp(argv[2], accounts[i].lastName)){
+                            strcpy(currentUser.name, argv[1]);
+                            strcpy(currentUser.lastName, argv[2]);
+                            mainMenu();
+                }
+                i++;
+        }
+        login_menu();
+    }
     login_menu();
-    mainMenu();
 }

@@ -101,8 +101,6 @@ void transfer(){
     mvwprintw(win, 0,5, "SELECT AN ACCOUNT");
 
     ind=0;
-    account nonUserAccounts[100];
-    int ind2=0;
     account accounts[100];   // citire conturi din fisier
     int i=0;
     menuChoices choices[10];
@@ -134,8 +132,6 @@ void transfer(){
                 strcpy(choices[ind].name, temp);
                 choices[ind++].f = transfer2;
             }
-            else 
-                nonUserAccounts[ind2++] = accounts[i];
             i++;
 
     } 
